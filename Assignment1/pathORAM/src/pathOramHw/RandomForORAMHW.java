@@ -24,7 +24,8 @@ public class RandomForORAMHW implements RandForORAMInterface {
 		
 		try
 		{
- 			rnd_generator = SecureRandom.getInstanceStrong("SHA1PRNG);
+ 			// original: rnd_generator = SecureRandom.getInstanceStrong("SHA1PRNG); "
+			rnd_generator = SecureRandom.getInstanceStrong();
 		}
 		catch(Exception e)
 		{
