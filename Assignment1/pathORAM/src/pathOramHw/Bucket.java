@@ -13,6 +13,8 @@ public class Bucket{
 	private static boolean is_init = false;
 	private static int max_size_Z = -1;
 	private ArrayList<Block> blocks_in_bucket; // variable to add/remove block from bucket in server
+	private int length;
+
 
 	
 	//TODO Add necessary variables
@@ -29,6 +31,7 @@ public class Bucket{
 		for (i=0; i<max_size_Z; i++){
 			blocks_in_bucket.add(new Block());
 		}
+		length = 0;
 	}
 	
 	// Copy constructor
@@ -39,6 +42,15 @@ public class Bucket{
 			throw new RuntimeException("the other bucket is not malloced.");
 		}
 		//TODO Must complete this method for submission
+		//if malloced, refer .other and create new blocks again in bucket
+
+		blocks_in_bucket = new ArrayList<Block>(max_size_Z);
+		int i;
+		for (i=0; i<other.getBlocks().size(); i++){
+			blocks_in_bucket.add(new Block(other.getBlocks().get(i)));
+		}
+		length = other.length;
+
 	}
 	
 	//Implement and add your own methods.
