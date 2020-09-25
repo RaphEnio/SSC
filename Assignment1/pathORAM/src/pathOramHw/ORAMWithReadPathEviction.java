@@ -34,14 +34,14 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 		this.storage = storage;
 		this.storage.setCapacity(getNumBuckets());
 		this.rand_gen = (RandomForORAMHW) rand_gen;
-		/* Set bound size for the random int generator */
+		// Set bound size for the random int generator
 		rand_gen.setBound(getNumLeaves());
-		/* create and fill position map of size L*/
+		// create and fill position map of size L
 		positionMap = new int[getNumLevels()];
 		for (int i = 0; i < positionMap.length; i++){
 			positionMap[i] = rand_gen.getRandomLeaf();
 		}
-		/* initialize the stash and leave it empty */
+		// initialize the stash and leave it empty
 		this.stash = new ArrayList<>();
 
 	}
@@ -49,23 +49,49 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 	@Override
 	public byte[] access(Operation op, int blockIndex, byte[] newdata) {
+		byte[] data = null;
 		/* Remap block at blockIndex.*/
 		// get leaf where the data is stores
 		int x =  positionMap[blockIndex];//Arrays.binarySearch(positionMap, blockIndex);
 		// generate new position
 		int new_x = rand_gen.getRandomLeaf();
 		/* Read path for leaf */
-		// fill stash
-		return null;
+		// get path
+		List<Integer> path = new ArrayList<>();
+		for(int l = getNumLevels() - 1; l >= 0; l--) {
+			path.add(P(x, l));
+		}
+		// if the block is not in the tree is must be already in the stash
+		if (path == null) {
+
+		}
+		return data;
 	}
 
 
 	@Override
 	public int P(int leaf, int level) {
-		// TODO Must complete this method for submission
+		//go through all levels
+		for(int i = getNumLevels() - 1; i >= 0; i--) {
+			// find the indices of the blocks
+		}
 		return 0;
 	}
 
+	/**
+	 * Returns the Block of the given index.
+	 * @param blockIndex index of the Block to find
+	 */
+	public Block findBlockInStash(int blockIndex){
+		Block result = null;
+			for (int i = 0; i < getStashSize(); i++) {
+				if (stash.get(i).index == blockIndex) {
+					result = stash.get(i);
+					break;
+				}
+			}
+		return result;
+	}
 
 	@Override
 	public int[] getPositionMap() {
