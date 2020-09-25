@@ -12,6 +12,8 @@ import javax.management.RuntimeErrorException;
 public class Bucket{
 	private static boolean is_init = false;
 	private static int max_size_Z = -1;
+	private ArrayList<Block> blocks_in_bucket; // variable to add/remove block from bucket in server
+
 	
 	//TODO Add necessary variables
 	
@@ -21,6 +23,12 @@ public class Bucket{
 			throw new RuntimeException("Please set bucket size before creating a bucket");
 		}
 		//TODO Must complete this method for submission
+
+		blocks_in_bucket = new ArrayList<Block>(max_size_Z);
+		int i;
+		for (i=0; i<max_size_Z; i++){
+			blocks_in_bucket.add(new Block());
+		}
 	}
 	
 	// Copy constructor
