@@ -12,9 +12,11 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 	/**
 	 * TODO add necessary variables 
 	 */
+	private int num_blocks;
 	
 	public ORAMWithReadPathEviction(UntrustedStorageInterface storage, RandForORAMInterface rand_gen, int bucket_size, int num_blocks){
 		// TODO complete the constructor
+		this.num_blocks = num_blocks;
 	}
 
 
@@ -54,29 +56,28 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 	@Override
 	public int getNumLeaves() {
-		// TODO Must complete this method for submission
-		return 0;
+		// according to lecture notes
+		return (int) Math.pow(2, getNumLevels());
 	}
 
 
 	@Override
 	public int getNumLevels() {
-		// TODO Must complete this method for submission
-		return 0;
+		// according to lecture notes
+		return (int) Math.ceil((Math.log(getNumBlocks()) / Math.log(2)));
 	}
 
 
 	@Override
 	public int getNumBlocks() {
-		// TODO Must complete this method for submission
-		return 0;
+		return this.num_blocks;
 	}
 
 
 	@Override
 	public int getNumBuckets() {
-		// TODO Must complete this method for submission
-		return 0;
+		// according to lecture notes
+		return (int) Math.pow(2, getNumLevels() + 1) - 1;
 	}
 
 
