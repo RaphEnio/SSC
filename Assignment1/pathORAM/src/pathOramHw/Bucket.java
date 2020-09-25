@@ -42,7 +42,7 @@ public class Bucket{
 			throw new RuntimeException("the other bucket is not malloced.");
 		}
 		//TODO Must complete this method for submission
-		//if malloced, refer .other and create new blocks again in bucket
+		//if malloced, refer .other and create new blocks again in bucket, test
 
 		blocks_in_bucket = new ArrayList<Block>(max_size_Z);
 		int i;
