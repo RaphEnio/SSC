@@ -24,7 +24,7 @@ public class Bucket{
 		}
 		//TODO Must complete this method for submission
 
-		blocks_in_bucket = new ArrayList<Block>(max_size_Z);
+		blocks_in_bucket = new ArrayList<Block>(max_size_Z); //initialize new byte array with 32 byte block size
 		int i;
 		for (i=0; i<max_size_Z; i++){
 			blocks_in_bucket.add(new Block());
