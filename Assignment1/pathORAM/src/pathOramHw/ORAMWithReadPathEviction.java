@@ -52,7 +52,43 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 	@Override
 	public byte[] access(Operation op, int blockIndex, byte[] newdata) {
 		// TODO Must complete this method for submission
-		return null;
+
+		int x = positionMap[blockIndex]; 								//get the current position of the block (Leaf) and store it in x
+		positionMap[blockIndex] = randOram.getRandomLeaf(); 			//Get a random leaf to fill the new position
+
+
+		for (int i=0; i<=treeHeight; i++){
+			Bucket temp_bucket = storage.ReadBucket( P(x,i) );			//iteratively read Bucket from storage with the index defined by P, till treeHeight
+			int counter = temp_bucket.returnRealSize();					//store the position of a real block and read all the blocks before it
+
+			for (int j=0; j<counter; j++){
+				Stash.add(temp_bucket.getBlocks().get(j)); 				// add the respective buckets to the Stash
+			}
+		}
+
+		byte [] data = null;
+		for (int i=0; i<Stash.size(); i++){
+			if (Stash.get(i).index == blockIndex){
+				data = Stash.get(i).data; 								//Store the data from the old block that needs to be written/accessed
+			}
+		}
+
+		if (op == Operation.WRITE){
+			ArrayList<Block> temp_Stash;
+			temp_Stash = Stash; 										// store the curent stash at client in a temporary variable
+
+			for (int i=0; i<temp_Stash.size(); i++){
+				if (temp_Stash.get(i).index == blockIndex){
+					temp_Stash.remove(i); 								//remove the previously stored data from the client Stash
+				}
+			}
+
+			Block new_block = new Block(blockIndex, newdata);			//create a new block with the new data
+			temp_Stash.add(new_block); 									// add it to temp_stash
+			Stash = temp_Stash; 										//update it to the current client stash
+		}
+
+		return data; 													// return the currently stored data in the storage to be read or written
 	}
 
 
