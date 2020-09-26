@@ -77,7 +77,7 @@ public class Bucket{
 	
 	int returnRealSize(){
 		// TODO Must complete this method for submission
-		return 0;
+		return 0; // this is a test comment for branches
 	}
 
 	static void resetState()
