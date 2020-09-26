@@ -59,55 +59,57 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 	@Override
 	public int P(int leaf, int level) {
 		// TODO Must complete this method for submission
-		return 0;
+		int a = (int) Math.pow(2, treeHeight-level);
+		int b = 2 *(leaf/a) + 1;
+		return a*b - 1;
 	}
 
 
 	@Override
 	public int[] getPositionMap() {
 		// TODO Must complete this method for submission
-		return null;
+		return positionMap;
 	}
 
 
 	@Override
 	public ArrayList<Block> getStash() {
 		// TODO Must complete this method for submission
-		return null;
+		return Stash;
 	}
 
 
 	@Override
 	public int getStashSize() {
 		// TODO Must complete this method for submission
-		return 0;
+		return Stash.size();
 	}
 
 	@Override
 	public int getNumLeaves() {
 		// TODO Must complete this method for submission
-		return 0;
+		return (int) Math.pow(2, treeHeight);
 	}
 
 
 	@Override
 	public int getNumLevels() {
 		// TODO Must complete this method for submission
-		return 0;
+		return treeHeight;
 	}
 
 
 	@Override
 	public int getNumBlocks() {
 		// TODO Must complete this method for submission
-		return 0;
+		return num_of_blocks;
 	}
 
 
 	@Override
 	public int getNumBuckets() {
 		// TODO Must complete this method for submission
-		return 0;
+		return (int) Math.pow(2, this.treeHeight+1) - 1;
 	}
 
 
