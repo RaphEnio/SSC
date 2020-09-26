@@ -88,6 +88,33 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 			Stash = temp_Stash; 										//update it to the current client stash
 		}
 
+
+		ArrayList<Block> new_Stash;
+		for (int i=treeHeight; i>=0; i--){
+			new_Stash = new ArrayList<Block>();
+
+			for (int j=0; j<Stash.size(); j++){
+				Block temp_block = Stash.get(j);
+				if (P(x,i) == P(positionMap[temp_block.index], i)){
+					new_Stash.add(temp_block);
+				}
+			}
+
+			int k = Math.min(new_Stash.size(), bucket_size);
+
+			new_Stash.removeAll(new_Stash.subList(k, new_Stash.size()));
+			Stash.removeAll(new_Stash);
+			Bucket new_bucket = new Bucket();
+
+			for(int l=0; l<new_Stash.size(); l++){
+				new_bucket.addBlock(new_Stash.get(l));
+			}
+			storage.WriteBucket(P(x, i), new_bucket);
+
+
+		}
+
+
 		return data; 													// return the currently stored data in the storage to be read or written
 	}
 
