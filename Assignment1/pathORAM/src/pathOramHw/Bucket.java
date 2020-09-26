@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import javax.management.RuntimeErrorException;
 
 /*
- * Name: TODO
- * StudentID: TODO
+ * Name: Arnab Chattopadhyay
+ * StudentID: s2364484
  */
 
 public class Bucket{
 	private static boolean is_init = false;
 	private static int max_size_Z = -1;
 	private ArrayList<Block> blocks_in_bucket; // variable to add/remove block from bucket in server
-	private int length;
+	protected int length;
 
 
 	
@@ -45,8 +45,7 @@ public class Bucket{
 		//if malloced, refer .other and create new blocks again in bucket, test
 
 		blocks_in_bucket = new ArrayList<Block>(max_size_Z);
-		int i;
-		for (i=0; i<other.getBlocks().size(); i++){
+		for (int i=0; i<other.getBlocks().size(); i++){
 			blocks_in_bucket.add(new Block(other.getBlocks().get(i)));
 		}
 		length = other.length;
@@ -56,16 +55,35 @@ public class Bucket{
 	//Implement and add your own methods.
 	Block getBlockByKey(int key){
 		// TODO Must complete this method for submission
+
+		for (int i =0; i<blocks_in_bucket.size(); i++){
+			if (blocks_in_bucket.get(i).index == key){
+				return blocks_in_bucket.get(i);
+			}
+		}
+
 		return null;
 	}
 	
 	void addBlock(Block new_blk){
 		// TODO Must complete this method for submission
+		blocks_in_bucket.set(length, new_blk);
+		length++;
 	}
 	
 	boolean removeBlock(Block rm_blk)
 	{
 		// TODO Must complete this method for submission
+
+		for (int i=0; i<blocks_in_bucket.size(); i++){
+			if (blocks_in_bucket.get(i).index == rm_blk.index){
+				blocks_in_bucket.remove(i);
+				blocks_in_bucket.add(new Block());
+				length--;
+				return true;
+			}
+		}
+
 		return false;
 	}
 	
