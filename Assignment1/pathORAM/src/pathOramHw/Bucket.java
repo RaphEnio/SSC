@@ -12,8 +12,8 @@ import javax.management.RuntimeErrorException;
 public class Bucket{
 	private static boolean is_init = false;
 	private static int max_size_Z = -1;
-	private ArrayList<Block> blocks_in_bucket; // variable to add/remove block from bucket in server
-	protected int length;
+	private ArrayList<Block> blocks_in_bucket; 					// data structure to add/remove block from bucket in server, i.e a byte array of blocks
+	protected int length; 										//counter to keep track of real blocks in the Bucket
 
 
 	
@@ -26,12 +26,11 @@ public class Bucket{
 		}
 		//TODO Must complete this method for submission
 
-		blocks_in_bucket = new ArrayList<Block>(max_size_Z); //initialize new byte array with 32 byte block size
-		int i;
-		for (i=0; i<max_size_Z; i++){
-			blocks_in_bucket.add(new Block());
+		blocks_in_bucket = new ArrayList<Block>(max_size_Z); 	//initialize new byte array with 32 byte block size
+		for (int i=0; i<max_size_Z; i++){
+			blocks_in_bucket.add(new Block()); 					//initialization, keep adding blocks till max_size of bucket - dummy blocks
 		}
-		length = 0;
+		length = 0; 											//since no real blocks added
 	}
 	
 	// Copy constructor
@@ -42,7 +41,7 @@ public class Bucket{
 			throw new RuntimeException("the other bucket is not malloced.");
 		}
 		//TODO Must complete this method for submission
-		//if malloced, refer .other and create new blocks again in bucket, test
+																//if malloced, refer .other and create new blocks again in bucket, test
 
 		blocks_in_bucket = new ArrayList<Block>(max_size_Z);
 		for (int i=0; i<other.getBlocks().size(); i++){
@@ -55,6 +54,7 @@ public class Bucket{
 	//Implement and add your own methods.
 	Block getBlockByKey(int key){
 		// TODO Must complete this method for submission
+																//match the key and return the concerned block else return null
 
 		for (int i =0; i<blocks_in_bucket.size(); i++){
 			if (blocks_in_bucket.get(i).index == key){
@@ -67,8 +67,8 @@ public class Bucket{
 	
 	void addBlock(Block new_blk){
 		// TODO Must complete this method for submission
-		blocks_in_bucket.set(length, new_blk);
-		length++;
+		blocks_in_bucket.set(length, new_blk); 					// add block at current real size with new_blk
+		length++; 												//increment real size
 	}
 	
 	boolean removeBlock(Block rm_blk)
@@ -76,10 +76,10 @@ public class Bucket{
 		// TODO Must complete this method for submission
 
 		for (int i=0; i<blocks_in_bucket.size(); i++){
-			if (blocks_in_bucket.get(i).index == rm_blk.index){
-				blocks_in_bucket.remove(i);
-				blocks_in_bucket.add(new Block());
-				length--;
+			if (blocks_in_bucket.get(i).index == rm_blk.index){ //check if the block exists
+				blocks_in_bucket.remove(i); 					//remove the block
+				blocks_in_bucket.add(new Block()); 				// add a new dummy block to provide blinding
+				length--; 										//reduce the real size of the bucket
 				return true;
 			}
 		}
@@ -90,12 +90,13 @@ public class Bucket{
 	
 	ArrayList<Block> getBlocks(){
 		// TODO Must complete this method for submission
-		return null;
+		return blocks_in_bucket; 								//return the current blocks in a bucket
 	}
 	
 	int returnRealSize(){
 		// TODO Must complete this method for submission
-		return 0; // this is a test comment for branches
+																//length variable initialized earlier keeps a track of the added or removed blocks, hence this is the real size of the Bucket
+		return length;
 	}
 
 	static void resetState()
