@@ -12,38 +12,38 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 	/**
 	 * TODO add necessary variables 
 	 */
-	private int[] positionMap;
-	private int num_of_blocks;
-	private int treeHeight;
-	private ArrayList<Block> Stash;
+	private int[] positionMap; 									//variable to store the position map
+	private int num_of_blocks; 									//variable to store the total number of blocks
+	private int treeHeight; 									// variable to store the tree height
+	private ArrayList<Block> Stash; 							//variable to store the client stash
 
-	private UntrustedStorageInterface storage;
-	private RandForORAMInterface randOram;
-	private int bucket_size;
+	private UntrustedStorageInterface storage; 					// variable to store the Server storage
+	private RandForORAMInterface randOram; 						//RNG and RandomLeaf as in Uniform distribution from pseudocode
+	private int bucket_size; 									//variable to store the bucket size
 
 	
 	public ORAMWithReadPathEviction(UntrustedStorageInterface storage, RandForORAMInterface rand_gen, int bucket_size, int num_blocks){
 		// TODO complete the constructor
-		this.storage = storage;
+		this.storage = storage;									//initializing all the passed variables into the constructor
 		this.num_of_blocks = num_blocks;
 		this.randOram = rand_gen;
 		this.bucket_size = bucket_size;
 
-		this.Stash = new ArrayList<Block>();
-		this.positionMap = new int[num_blocks];
+		this.Stash = new ArrayList<Block>();					//Initialize the Block Array for the client Stash
+		this.positionMap = new int[num_blocks];					//Initialize the position map with the total number of blocks
 
-		this.treeHeight = (int) (Math.ceil (Math.log(num_of_blocks) / Math.log(2)) );
-		this.randOram.setBound(getNumLeaves());
+		this.treeHeight = (int) (Math.ceil (Math.log(num_of_blocks) / Math.log(2)) );			// Calculate the Tree height based on the formula
+		this.randOram.setBound(getNumLeaves());					//Bound set for RNG to the number of leaves in the tree
 
 		for (int i=0; i<positionMap.length; i++){
-			positionMap[i] = randOram.getRandomLeaf();
+			positionMap[i] = randOram.getRandomLeaf();			//Fill position map with random leaves as is given in the pseudo-code
 		}
 
-		this.storage.setCapacity(getNumBuckets());
+		this.storage.setCapacity(getNumBuckets());				//Storage Capacity set to the number of buckets, before any read/write operation to the server
 
 		Bucket temp_bucket = new Bucket();
 		for (int i=0; i<getNumBuckets(); i++){
-			this.storage.WriteBucket(i, temp_bucket);
+			this.storage.WriteBucket(i, temp_bucket);			//initial state, fill all the buckets in the tree
 		}
 
 	}
