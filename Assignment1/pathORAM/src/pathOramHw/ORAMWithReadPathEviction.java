@@ -1,6 +1,13 @@
 package pathOramHw;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * Name: Arnab Chattopadhyay
@@ -19,8 +26,9 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 	private UntrustedStorageInterface storage; 					// variable to store the Server storage
 	private RandForORAMInterface randOram; 						//RNG and RandomLeaf as in Uniform distribution from pseudocode
-	private int bucket_size; 									//variable to store the bucket size
+	private int bucket_size;									//variable to store the bucket size
 
+	private Map<Integer,Integer> log = new HashMap<>();   		// Map to store the stash size and the accesses
 	
 	public ORAMWithReadPathEviction(UntrustedStorageInterface storage, RandForORAMInterface rand_gen, int bucket_size, int num_blocks){
 		// TODO complete the constructor
@@ -28,6 +36,8 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 		this.num_of_blocks = num_blocks;
 		this.randOram = rand_gen;
 		this.bucket_size = bucket_size;
+
+		log.put(-1, 0);
 
 		this.Stash = new ArrayList<Block>();					//Initialize the Block Array for the client Stash
 		this.positionMap = new int[num_blocks];					//Initialize the position map with the total number of blocks
@@ -55,9 +65,16 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 		int x = positionMap[blockIndex]; 								//get the current position of the block (Leaf) and store it in x
 		positionMap[blockIndex] = randOram.getRandomLeaf(); 			//Get a random leaf to fill the new position
+		// find level where x is stored
+		int currentLevel = getNumLevels() - 1; // start at highest level
+		int comBuckets = (int) Math.pow(2, currentLevel); // start with buckets in last level
+		// iteratively go through the tree to find the level where x is stored
+		while(x > comBuckets - 1) {
+			currentLevel -= 1;
+			comBuckets += (int) Math.pow(2, currentLevel);
+		}
 
-
-		for (int i=0; i<=treeHeight; i++){
+		for (int i=0; i<=currentLevel; i++){
 			Bucket temp_bucket = storage.ReadBucket( P(x,i) );			//iteratively read Bucket from storage with the index defined by P, till treeHeight
 			int counter = temp_bucket.returnRealSize();					//store the position of a real block and read all the blocks before it
 
@@ -90,7 +107,7 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 
 		ArrayList<Block> new_Stash;
-		for (int i=treeHeight; i>=0; i--){
+		for (int i=currentLevel; i>=0; i--){
 			new_Stash = new ArrayList<Block>();
 
 			for (int j=0; j<Stash.size(); j++){
@@ -113,18 +130,44 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 
 		}
-
-
+		writeLog(getStashSize());
 		return data; 													// return the currently stored data in the storage to be read or written
 	}
 
 
 	@Override
 	public int P(int leaf, int level) {
-		// TODO Must complete this method for submission
+		// calculate level of the leaf in the storage
+		int l = getNumLevels() - 1; // start at highest level
+		int comBuckets = (int) Math.pow(2, l); // start with buckets in last level
+		// iteratively go through the tree to find the level where the leaf is stored
+		while(leaf > comBuckets - 1) {
+			l -= 1;
+			comBuckets += (int) Math.pow(2, l);
+		}
+		int idx = (int) Math.pow(2, treeHeight) - 2 - (leaf - (int) Math.pow(2,l)) - 1;
+		List<Integer> path = new ArrayList<>();
+		path.add(idx); // add start point (or end point of the path)
+		int currentLeaf = idx;
+		int parent = 0;
+		while (currentLeaf > 0) {
+			if (currentLeaf % 2 == 0) {
+				parent = (currentLeaf - 2) / 2;
+			} else {
+				parent = (currentLeaf - 1) / 2;
+			}
+			path.add(parent);
+			currentLeaf = parent;
+		}
+		int result = path.size() - level - 1;
+		if (result < 0) {
+			return -1; // this can be caused by new randomly sampled positionmap
+		}
+		return path.get(result);
+		/** TODO Must complete this method for submission
 		int a = (int) Math.pow(2, treeHeight-level);
 		int b = 2 *(leaf/a) + 1;
-		return a*b - 1;
+		return a*b - 1; */
 	}
 
 
@@ -151,7 +194,7 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 	@Override
 	public int getNumLeaves() {
 		// TODO Must complete this method for submission
-		return (int) Math.pow(2, treeHeight);
+		return (int) Math.pow(2, treeHeight) - 1;
 	}
 
 
@@ -175,6 +218,32 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 		return (int) Math.pow(2, this.treeHeight+1) - 1;
 	}
 
-
-	
+	public void writeLog(int stashSize){
+		log.put(-1,log.get(-1) + 1);
+		if(log.containsKey(stashSize)){
+			log.put(stashSize, log.get(stashSize) + 1);
+		} else{
+			log.put(stashSize, 1);
+		}
+	}
+	public void saveLog(){
+		File file = new File("log.txt");
+		BufferedWriter writer = null;
+		try{
+			writer = new BufferedWriter(new FileWriter(file));
+			for(Map.Entry<Integer, Integer> entry : log.entrySet()){
+				writer.write(entry.getKey() + "," + entry.getValue());
+				writer.newLine();
+			}
+			writer.flush();
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			try{
+				writer.close();
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+	}
 }

@@ -15,7 +15,7 @@ public class Job {
 
 	public static void main(String[] args) {
 		int bucket_size = 4;
-		int num_blocks = (int) Math.pow(2, 20);
+		int num_blocks = (int) Math.pow(2, 15);
 		
 		//Set the Bucket size for all the buckets.
 		Bucket.setMaxSize(bucket_size);
@@ -45,6 +45,6 @@ public class Job {
 		for(int i = 0; i < num_blocks; i++){
 			System.out.println("dbg read from " + i + " value is :" + Arrays.toString(oram.access(Operation.READ, i, new byte[128])));
 		}
-				
+		((ORAMWithReadPathEviction) oram).saveLog();
 	}
 }
