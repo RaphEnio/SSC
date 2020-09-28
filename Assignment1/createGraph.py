@@ -2,24 +2,16 @@ from matplotlib import pyplot as plt
 import pathlib
 import numpy as np
 
-def calculate_prob(data, numAccess):
-    numStashes = data.shape[0]
-    result = np.zeros(numStashes)
-    for i in range(numStashes):
-        result[i] = (data[i]/numAccess)
-    return result
-
+# counts the number of stash accesses of larger stasher per stash
 def getBiggerStash(stashes):
     keys = list(stashes.keys())
     result = np.zeros(len(keys))
-    count = 0
     for i in range(0, len(keys)):
         tmp = 0
         for j in range(0, len(keys)):
             if int(keys[j]) > int(keys[i]):
                 tmp += stashes.get(keys[j])
-        result[count] = tmp
-        count += 1
+        result[i] = tmp
     return result
 
 # get path of the working directory
@@ -27,6 +19,7 @@ wpath = pathlib.Path(__file__).parent.absolute()
 print(wpath)
 filepath = str(wpath) + "\pathORAM\log.txt"
 
+# read the logfile and save it in a dictonary, where the stash size is the key
 stash = {}
 with open(filepath, "r") as f:
     for line in f:
@@ -39,10 +32,13 @@ with open(filepath, "r") as f:
         else:
             stash[stashSize] += ac
 
+# call function
 biggerStashes =  np.array(getBiggerStash(stash))
-probabilities = calculate_prob(biggerStashes, sum(stash.values()))
-x = list(stash.keys())
+# transform stash accesses to probabilities
+probabilities = biggerStashes/sum(stash.values())
 
+# plot the data
+x = list(stash.keys())
 fig = plt.figure(figsize=(30,8))
 plt.title("Probability that the stash size is larger")
 plt.xlabel("stash size")
