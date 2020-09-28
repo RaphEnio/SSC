@@ -25,7 +25,7 @@ with open(filepath, "r") as f:
     for line in f:
         stashSize = line.split(",")[0]
         ac = int(line.split(",")[1])
-        if (int(stashSize) == -1 or int(stashSize) == 0):
+        if (int(stashSize) == -1 or int(stashSize) == 0): # dont read stash size -1 and 0
             continue
         if stashSize not in stash:
             stash.update({stashSize: ac})
