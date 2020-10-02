@@ -65,9 +65,14 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 	public byte[] access(Operation op, int blockIndex, byte[] newdata) {
 
 		// TODO Must complete this method for submission
-
-		int x = positionMap[blockIndex]; 								//get the current position of the block (Leaf) and store it in x
-		positionMap[blockIndex] = randOram.getRandomLeaf(); 			//Get a random leaf to fill the new position
+		int x = -1;
+		try{
+			x = positionMap[blockIndex]; 								//get the current position of the block (Leaf) and store it in x
+			positionMap[blockIndex] = randOram.getRandomLeaf();
+		} catch (ArrayIndexOutOfBoundsException e){
+			System.out.println("Out of bounds at positionMap");
+		}
+					//Get a random leaf to fill the new position
 		int levelX = findLevel(x);										// find level where x is stored
 
 
@@ -79,13 +84,17 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 				Stash.add(temp_bucket.getBlocks().get(j)); 				// add the respective buckets to the Stash
 			}
 		}
-
 		byte [] data = null;
-		for (int i=0; i<Stash.size(); i++){
-			if (Stash.get(i).index == blockIndex){
-				data = Stash.get(i).data; 								//Store the data from the old block that needs to be written/accessed
+		try{
+			for (int i=0; i<Stash.size(); i++){
+				if (Stash.get(i).index == blockIndex){
+					data = Stash.get(i).data; 								//Store the data from the old block that needs to be written/accessed
+				}
 			}
+		} catch (ArrayIndexOutOfBoundsException e){
+			System.out.println("Out of bounds at stash");
 		}
+
 
 		if (op == Operation.WRITE){
 			ArrayList<Block> temp_Stash;
