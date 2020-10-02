@@ -42,7 +42,7 @@ public class Job {
 			System.out.println("dbg written block " + i + " has stash size: " + oram.getStashSize());
 		}
 		for (int j = 0; j < 200; j++){
-			for(int i = 0; i < 200 * num_blocks; i++){
+			for(int i = 0; i < num_blocks; i++){
 				System.out.println("dbg read from " + i + " value is :" + Arrays.toString(oram.access(Operation.READ, i, new byte[128])));
 			}
 		}
