@@ -26,7 +26,9 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 	private UntrustedStorageInterface storage; 					// variable to store the Server storage
 	private RandForORAMInterface randOram; 						//RNG and RandomLeaf as in Uniform distribution from pseudocode
-	private int bucket_size;									//variable to store the bucket size
+	private int bucket_size;									//variable to store the bucket
+	// access counter
+	private int accessCount = 1;
 
 	private Map<Integer,Integer> log = new HashMap<>();   		// Map to store the stash size and the accesses
 	
@@ -61,8 +63,7 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 	@Override
 	public byte[] access(Operation op, int blockIndex, byte[] newdata) {
-		// access counter
-		long accessCount = 1;
+
 		// TODO Must complete this method for submission
 
 		int x = positionMap[blockIndex]; 								//get the current position of the block (Leaf) and store it in x
@@ -130,7 +131,7 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 			writeLog(getStashSize());// write to the logfile
 		}
 
-		accessCount += 1;
+		accessCount++;
 		return data; 													// return the currently stored data in the storage to be read or written
 	}
 
