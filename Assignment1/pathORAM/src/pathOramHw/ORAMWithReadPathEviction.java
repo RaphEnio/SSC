@@ -61,6 +61,8 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 	@Override
 	public byte[] access(Operation op, int blockIndex, byte[] newdata) {
+		// access counter
+		long accessCount = 1;
 		// TODO Must complete this method for submission
 
 		int x = positionMap[blockIndex]; 								//get the current position of the block (Leaf) and store it in x
@@ -124,7 +126,11 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 
 
 		}
-		writeLog(getStashSize());										// write to the logfile
+		if (accessCount > 3000000) {
+			writeLog(getStashSize());// write to the logfile
+		}
+
+		accessCount += 1;
 		return data; 													// return the currently stored data in the storage to be read or written
 	}
 
@@ -214,7 +220,7 @@ public class ORAMWithReadPathEviction implements ORAMInterface{
 		}
 	}
 	public void saveLog(){
-		File file = new File("log.txt");			// create new file
+		File file = new File("simulation1.txt");			// create new file
 		BufferedWriter writer = null;
 		try{
 			writer = new BufferedWriter(new FileWriter(file));
