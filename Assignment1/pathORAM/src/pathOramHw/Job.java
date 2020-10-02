@@ -41,10 +41,12 @@ public class Job {
 			oram.access(Operation.WRITE, i % num_blocks, write_bbuf);
 			System.out.println("dbg written block " + i + " has stash size: " + oram.getStashSize());
 		}
-		
-		for(int i = 0; i < 200 * num_blocks; i++){
-			System.out.println("dbg read from " + i + " value is :" + Arrays.toString(oram.access(Operation.READ, i, new byte[128])));
+		for (int j = 0; j < 200; j++){
+			for(int i = 0; i < 200 * num_blocks; i++){
+				System.out.println("dbg read from " + i + " value is :" + Arrays.toString(oram.access(Operation.READ, i, new byte[128])));
+			}
 		}
+
 		((ORAMWithReadPathEviction) oram).saveLog();
 	}
 }
