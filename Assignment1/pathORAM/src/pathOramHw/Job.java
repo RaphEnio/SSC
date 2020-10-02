@@ -43,7 +43,7 @@ public class Job {
 		}
 		for (int j = 0; j < 200; j++){
 			for(int i = 0; i < num_blocks; i++){
-				System.out.println("dbg read from " + i + " value is :" + Arrays.toString(oram.access(Operation.READ, i, new byte[128])));
+				System.out.println("in iteration: " + j + " dbg read from " + i + " value is :" + Arrays.toString(oram.access(Operation.READ, i, new byte[128])));
 			}
 		}
 
