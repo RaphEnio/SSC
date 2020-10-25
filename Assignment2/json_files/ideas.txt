@@ -1,0 +1,17 @@
+First task: Encrypt with given parameters and add to jso file --> SWHE scheme
+    --> c = pq + 2r + m, where r <-- [0, 2^(rho)] < p/2
+
+Second Taks:
+    --> run operations and then check if the decrypted ciphertext is 1
+    --> probably with 5 bits faster since the noise gets too big faster??
+
+Third Task:
+    --> 
+
+
+
+Fuctions to implement_
+    SWHE:
+        - Encrypt
+        - Decrpt
+        - XOR
