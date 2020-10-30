@@ -36,6 +36,29 @@ def decimalToBinary(n):
 def decrypt_message(ciphertext, p):
     return (ciphertext % p) % 2
 
+#performs the evaluation step and then checks wether the resultin ciphertext
+# is decrypted as 1 and then returns the number of operations performed
+def eval_c(pk, operation, ciphertext, sk):
+    iterations = 0
+    result = 0
+    op_cipher = ciphertext
+    # do the evaluation
+    # perform additional additional additions or mutiplication until
+    # the resulting ciphertext is 1
+    while(result != 1):
+        if operation == "XOR":
+            op_cipher = op_cipher + ciphertext
+        else:
+            op_cipher = op_cipher * ciphertext
+        result = op_cipher % pk[0]
+        iterations += 1
+        # decrypt the ciphertext
+        result = decrypt_message(result,sk)
+    return iterations
+    
+    
+
+
 
 
 
