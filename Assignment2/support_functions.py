@@ -18,24 +18,38 @@ def read_json(path_to_file):
 
 #encrpyts a given bit according to the SWHE scheme.
 # calculates c = pq + 2r + m
-def encrypt_message(plain_bit, eta, gamma, rho):
-
-    # sample p. Do this until p is odd
-    is_odd = False
-    while(not is_odd):
-        p = secrets.SystemRandom().randrange(math.pow(2, eta-1), math.pow(2,eta) - 1)
-        is_odd = (p % 2 == 0)
-    # sample q
-    q = secrets.SystemRandom().randrange(0, math.pow(2, gamma)/p)
-    # sample r. Do this until r < p/2
-    is_valid = False
-    while(not is_valid):
-        r = secrets.SystemRandom().randrange(0, math.pow(2,rho))
-        is_valid = (r < (p/2))
+def encrypt_message(plain_bit, rho, tau, pk):
+    # first sample S
+    s = secrets.SystemRandom().randrange(1,tau)
+    # Then sample r
+    r = secrets.SystemRandom().randrange(- math.pow(2, 2 * rho), math.pow(2, 2 * rho))
     # encrypt message bit  
-    c =  p * q + 2 * r + plain_bit
+    c = (plain_bit + 2 * r + 2 * sum(pk[1:s])) % pk[0]
     return c
 
 # function to convert a number from decimal to binary representation
 def decimalToBinary(n):
    return bin(n).replace("0b", "")
+
+
+# decrypt a ciphertext according to m' = (c mod p) mod 2
+def decrypt_message(ciphertext, p):
+    return (ciphertext % p) % 2
+
+
+
+
+
+
+
+
+
+
+ # sample p. Do this until p is odd
+    #is_odd = False
+    #while(not is_odd):
+        #p = secrets.SystemRandom().randrange(math.pow(2, eta-1), math.pow(2,eta) - 1)
+        #is_odd = (p % 2 == 0)
+    # sample q
+    #q = secrets.SystemRandom().randrange(0, math.pow(2, gamma)/p)
+    # sample r. Do this until r < p/2
