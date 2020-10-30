@@ -54,6 +54,8 @@ def eval_c(pk, operation, ciphertext, sk):
         iterations += 1
         # decrypt the ciphertext
         result = decrypt_message(c_,sk)
+        if result != 0 and result != 1:
+            print("DEBUG: ", result)
     return iterations
     
     
