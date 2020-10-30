@@ -17,13 +17,10 @@ p = int(data["SWHE"]["sk"])
 
 c1 = int(ciphertexts[0]["Ciphertext"])
 
-m1 = sf.decrypt_message(c1,p)
+for i in range (0,len(ciphertexts)):
+    ciphertext = int(ciphertexts[i]["Ciphertext"])
+    noise = int(ciphertexts[i]["Noise Bitlength"])
+    for op in ["XOR", "AND"]:
+        intertions = sf.eval_c(pk, op, ciphertext, p)
+        print("Ciphertext with a {} bit noise, can have a maximum of {} {} operations".format(noise, intertions, op))
 
-print(m1)
-
-
-intertions = sf.eval_c(pk, "AND", c1, p)
-
-print("Needed iterations: {}".format(intertions))
-
-#print("Evauleted ciphertext = {}".format(sf.decrypt_message(c,p)))

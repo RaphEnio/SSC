@@ -50,10 +50,10 @@ def eval_c(pk, operation, ciphertext, sk):
             op_cipher = op_cipher + ciphertext
         else:
             op_cipher = op_cipher * ciphertext
-        result = op_cipher % pk[0]
+        c_ = op_cipher % pk[0]
         iterations += 1
         # decrypt the ciphertext
-        result = decrypt_message(result,sk)
+        result = decrypt_message(c_,sk)
     return iterations
     
     
