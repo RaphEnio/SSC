@@ -10,7 +10,7 @@
 # So to calculate hamming distance, calculate XOR. Only problem, XOR produces a lot of noise
 import support_functions as sf
 
-path = r"C:\Users\Raphael\github\SSC\Assignment2\json_files\swhe-task3_v2_test.json"
+path = r"C:\Users\Raphael\github\SSC\Assignment2\json_files\swhe-task3_v2.json"
 data = sf.read_json(path)
 
 #get needed variables
