@@ -20,7 +20,8 @@ c1 = int(ciphertexts[0]["Ciphertext"])
 for i in range (0,len(ciphertexts)):
     ciphertext = int(ciphertexts[i]["Ciphertext"])
     noise = int(ciphertexts[i]["Noise Bitlength"])
+    print("----------{} bit noise----------".format(noise))
     for op in ["XOR", "AND"]:
         intertions = sf.eval_c(pk, op, ciphertext, p)
-        print("Ciphertext with a {} bit noise, can have a maximum of {} {} operations".format(noise, intertions, op))
-
+        print("Max. {} {} operations".format(intertions, op))
+    
