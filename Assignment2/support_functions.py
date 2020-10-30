@@ -15,6 +15,17 @@ def read_json(path_to_file):
     file.close()
     return json_data
 
+# write something to a given json file
+def write_json(data, path_to_file):
+    # open file
+    file = open(path_to_file, "r+")
+    #load file
+    json_data = json.load(file)
+    #update the json
+    json_data.update(data)
+    file.seek(0)
+    #write to file
+    json.dump(json_data, file)
 
 #encrpyts a given bit according to the SWHE scheme.
 # calculates c = pq + 2r + m

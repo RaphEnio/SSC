@@ -5,8 +5,8 @@
 ###############################################################
 
 import support_functions as sf
-
-data = sf.read_json(r"C:\Users\Raphael\github\SSC\Assignment2\json_files\swhe-task1.json")
+path = r"C:\Users\Raphael\github\SSC\Assignment2\json_files\swhe-task1.json"
+data = sf.read_json(path)
 
 #get needed variables
 #convert list of binary values into an integer
@@ -27,6 +27,6 @@ for bit in plaintext:
         cipher_bit = sf.decimalToBinary(cipher_bit)
     ciphertext_vector.append(cipher_bit)
 
-print(ciphertext_vector)
-
-# TODO add it to the json file
+#write the encrypted vector to the json file
+entry = {"Encrypted Vector" : ciphertext_vector}
+sf.write_json(entry, path)

@@ -10,8 +10,8 @@
 # So to calculate hamming distance, calculate XOR. Only problem, XOR produces a lot of noise
 import support_functions as sf
 
-
-data = sf.read_json(r"C:\Users\Raphael\github\SSC\Assignment2\json_files\swhe-task3_v2.json")
+path = r"C:\Users\Raphael\github\SSC\Assignment2\json_files\swhe-task3_v2_test.json"
+data = sf.read_json(path)
 
 #get needed variables
 pk = list(map(int, data["SWHE"]["Public Parameters"]["pk"]))
@@ -42,4 +42,6 @@ for bit in bin_hd:
     cipher_bit = sf.encrypt_message(int(bit), rho, tau, pk)
     ciphertext_vector.append(cipher_bit)
 
-print(ciphertext_vector)
+# write to json file
+entry = {"Encrypted Hamming Distance" : ciphertext_vector}
+sf.write_json(entry, path)
