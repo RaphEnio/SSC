@@ -28,7 +28,6 @@ def write_json(data, path_to_file):
     json.dump(json_data, file)
 
 #encrpyts a given bit according to the SWHE scheme.
-# calculates c = pq + 2r + m
 def encrypt_message(plain_bit, rho, tau, pk):
     # first sample S
     s = secrets.SystemRandom().randrange(1,tau)
@@ -70,14 +69,6 @@ def eval_c(pk, operation, ciphertext, sk):
     return iterations
     
     
-
-
-
-
-
-
-
-
 
 
 
